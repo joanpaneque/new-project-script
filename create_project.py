@@ -10,7 +10,9 @@ script_dir = Path(__file__).parent.absolute()
 # Ask for the project name
 project_name = input("Project name: ")
 
-# Execute composer global require laravel/installer
+# Uninstall and reinstall Laravel installer to ensure latest version
+print("Uninstalling Laravel installer...")
+subprocess.run(["composer", "global", "remove", "laravel/installer"], check=False)  # check=False porque puede no estar instalado
 print("Installing Laravel installer...")
 subprocess.run(["composer", "global", "require", "laravel/installer"], check=True)
 print("Laravel installer installed successfully")
@@ -18,7 +20,7 @@ print("Laravel installer installed successfully")
 # Execute laravel new with the project name
 print(f"Creating Laravel project '{project_name}'...")
 os.chdir(script_dir)
-subprocess.run(f"laravel new {project_name} --pest --boost --npm --no-interaction", shell=True, check=True)
+subprocess.run(f"laravel new {project_name} --pest --npm --no-interaction", shell=True, check=True)
 print(f"Laravel project '{project_name}' created successfully")
 
 # Change to project directory
@@ -234,7 +236,7 @@ if vite_config.exists():
         if "vue({" not in vite_content:
             vite_content = vite_content.replace(
                 "        laravel({",
-                "        vue({\n            template: {\n                transformAssetUrls: {\n                    base: null,\n                    includeAbsolute: false,\n                },\n            },\n        }),\n        laravel({"
+                "        vue({\n            template: {\n                transformAssetUrls: {\n                    base: null,\n includeAbsolute: false,\n                },\n            },\n        }),\n        laravel({"
             )
     
     with open(vite_config, "w") as f:
@@ -284,7 +286,7 @@ bootstrap_app = Path("bootstrap/app.php")
 if bootstrap_app.exists():
     bootstrap_app.unlink()
 
-bootstrap_app_content = """<?php
+bootstrap_app_content = r"""<?php
 
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -343,7 +345,7 @@ web_routes = Path("routes/web.php")
 if web_routes.exists():
     web_routes.unlink()
 
-web_routes_content = """<?php
+web_routes_content = r"""<?php
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -383,4 +385,3 @@ with open("resources/js/Pages/Welcome.vue", "w") as f:
 print("Welcome.vue created successfully")
 
 print(f"\nSetup complete! Your Laravel project '{project_name}' is ready.")
-
