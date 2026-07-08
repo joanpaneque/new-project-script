@@ -115,7 +115,7 @@ env_file = Path(".env")
 if env_file.exists():
     with open(env_file, "r") as f:
         lines = f.readlines()
-    
+
     updated_lines = []
     for line in lines:
         stripped = line.strip()
@@ -150,7 +150,7 @@ if env_file.exists():
             updated_lines.append("DB_PASSWORD=password\n")
         else:
             updated_lines.append(line)
-    
+
     with open(env_file, "w") as f:
         f.writelines(updated_lines)
     print(".env file updated successfully")
@@ -173,9 +173,9 @@ composer_file = Path("composer.json")
 if composer_file.exists():
     with open(composer_file, "r") as f:
         composer_content = f.read()
-    
+
     composer_content = composer_content.replace("php artisan", "./vendor/bin/sail artisan")
-    
+
     with open(composer_file, "w") as f:
         f.write(composer_content)
     print("composer.json updated successfully")
@@ -223,7 +223,7 @@ vite_config = Path("vite.config.js")
 if vite_config.exists():
     with open(vite_config, "r") as f:
         vite_content = f.read()
-    
+
     # Check if vue plugin is already imported
     if "import vue from '@vitejs/plugin-vue'" not in vite_content:
         # Add vue import after laravel import
@@ -231,14 +231,14 @@ if vite_config.exists():
             "import laravel from 'laravel-vite-plugin';",
             "import laravel from 'laravel-vite-plugin';\nimport vue from '@vitejs/plugin-vue';"
         )
-        
+
         # Add vue plugin to plugins array
         if "vue({" not in vite_content:
             vite_content = vite_content.replace(
                 "        laravel({",
-                "        vue({\n            template: {\n                transformAssetUrls: {\n                    base: null,\n includeAbsolute: false,\n                },\n            },\n        }),\n        laravel({"
+                "        vue({\n            template: {\n                transformAssetUrls: {\n                    base: null,\n                    includeAbsolute: false,\n                },\n            },\n        }),\n        laravel({"
             )
-    
+
     with open(vite_config, "w") as f:
         f.write(vite_content)
     print("vite.config.js updated successfully")
